@@ -50,9 +50,12 @@ int _printf(const char *format, ...)
 	va_start(ap, format);
 	while (format[i] != '\0')
 	{
-		write(1, format + i, 1);
-		i++;
-		nb++;
+		if (format[i] != '%')
+		{
+			write(1, format + i, 1);
+			i++;
+			nb++;
+		}
 		if (format[i] == '%')
 		{
 			i++;
