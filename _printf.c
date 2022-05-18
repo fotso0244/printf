@@ -16,7 +16,7 @@ int print_format_c(char c, int nb)
 	return (nb);
 }
 /**
- * printf_format_s - prints a string
+ * print_format_s - prints a string
  * @str: a string
  * @nb: counter
  *
