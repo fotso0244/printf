@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
 #include <stddef.h>
 #include <unistd.h>
 /**
@@ -24,7 +25,7 @@ int print_format_c(char c, int nb)
  */
 int print_format_s(char *str, int nb)
 {
-	if (str != NULL)
+	if (str != 0x0)
 	{
 		while (*str != '\0')
 		{
@@ -32,6 +33,11 @@ int print_format_s(char *str, int nb)
 			str++;
 			nb++;
 		}
+	}
+	else
+	{
+		write(1, "(null)", 6);
+		nb += 6;
 	}
 	return (nb);
 }
