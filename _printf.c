@@ -54,30 +54,35 @@ int _printf(const char *format, ...)
 	char *p;
 
 	va_start(ap, format);
-	while (format[i] != '\0')
+	if (format != NULL)
 	{
-		if (format[i] != '%')
+		while (format[i] != '\0')
 		{
-			write(1, format + i, 1);
-			i++;
-			nb++;
-		}
-		if (format[i] == '%')
-		{
-			i++;
-			if (format[i] == 'c')
+			if (format[i] != '%')
 			{
-				nb = print_format_c(va_arg(ap, int), nb);
+				write(1, format + i, 1);
 				i++;
+				nb++;
 			}
-			if (format[i] == 's')
+			if (format[i] == '%')
 			{
-				p = va_arg(ap, char *);
-				nb = print_format_s(p, nb);
 				i++;
+				if (format[i] == 'c')
+				{
+					nb = print_format_c(va_arg(ap, int), nb);
+					i++;
+				}
+				if (format[i] == 's')
+				{
+					p = va_arg(ap, char *);
+					nb = print_format_s(p, nb);
+					i++;
+				}
 			}
 		}
 	}
+	else
+		nb = -1;
 	return (nb);
 }
 
