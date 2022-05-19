@@ -73,8 +73,12 @@ int print_format_di(int i, int nb)
 	}
 	size++;
 	if (i < 0)
+	{
+		div = i * (-1);
 		size++;
-	div = i;
+	}
+	else
+		div = i;
 	s = malloc(sizeof(*s) * (size + 1));
 	if (s != NULL)
 	{
@@ -86,7 +90,7 @@ int print_format_di(int i, int nb)
 		}
 		s[j] = div + 48;
 		if (i < 0)
-			s[j + 1] = '-';
+			s[size - 1] = '-';
 		s[size] = '\0';
 		j = 0;
 		p = s + size - 1;
