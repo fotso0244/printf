@@ -64,7 +64,8 @@ int check(char c)
 int print_format_di(int i, int nb)
 {
 	char *s, *p;
-	int mod = 0, new_nb = nb, j, div = i, size = -1;
+	int new_nb = nb, j, size = -1;
+	long int mod = 0, div = (long int)i;
 
 	if (i == 0)
 	{
@@ -79,7 +80,7 @@ int print_format_di(int i, int nb)
 	size++;
 	if (i < 0)
 	{
-		div = i * (-1);
+		div = (long int)i * (-1);
 		size++;
 	}
 	else
