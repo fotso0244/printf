@@ -41,6 +41,7 @@ int print_format_s(char *str, int nb)
 	}
 	return (nb);
 }
+
 /**
  * _printf - prints all arguments
  * @format: pattern of arguments
@@ -56,6 +57,8 @@ int _printf(const char *format, ...)
 	va_start(ap, format);
 	if (format != NULL)
 	{
+		if (format == NULL || strcmp(format, "%") == 0)
+			return (-1);
 		while (format[i] != '\0')
 		{
 			if (format[i] != '%')
@@ -91,4 +94,3 @@ int _printf(const char *format, ...)
 		nb = -1;
 	return (nb);
 }
-
