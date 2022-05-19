@@ -70,7 +70,6 @@ int _printf(const char *format, ...)
 {
 	int i = 0, nb = 0;
 	va_list ap;
-	char *p;
 
 	va_start(ap, format);
 	if (format != NULL)
@@ -82,8 +81,7 @@ int _printf(const char *format, ...)
 			if (format[i] != '%' || (format[i] == '%' && check(format[i + 1]) == 0))
 			{
 				write(1, format + i, 1);
-				i++;
-				nb++;
+				i++, nb++;
 			}
 			if (format[i] == '%')
 			{
@@ -91,20 +89,12 @@ int _printf(const char *format, ...)
 				if (format[i] == '%')
 				{
 					write(1, "%", 1);
-					nb++;
-					i++;
+					nb++, i++;
 				}
 				if (format[i] == 'c')
-				{
-					nb = print_format_c(va_arg(ap, int), nb);
-					i++;
-				}
+					nb = print_format_c(va_arg(ap, int), nb), i++;
 				if (format[i] == 's')
-				{
-					p = va_arg(ap, char *);
-					nb = print_format_s(p, nb);
-					i++;
-				}
+					nb = print_format_s(va_arg(ap, char *), nb), i++;
 			}
 		}
 	}
