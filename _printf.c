@@ -146,7 +146,7 @@ int _printf(const char *format, ...)
 					nb = print_format_c(va_arg(ap, int), nb), i++;
 				if (format[i] == 's')
 					nb = print_format_s(va_arg(ap, char *), nb), i++;
-				if (format[i] == 'd')
+				if (format[i] == 'd' || format[i] == 'i')
 					nb = print_format_di(va_arg(ap, int), nb);
 			}
 		}
