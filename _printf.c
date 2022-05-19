@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <string.h>
 #include <stddef.h>
 #include <unistd.h>
@@ -60,6 +61,47 @@ int check(char c)
 	}
 	return (0);
 }
+int print_format_di(int i, int nb)
+{
+	char *s, *p;
+	int mod = 0, new_nb = nb, j, div = i, size = -1;
+
+	while (div != 0)
+	{
+		div /= 10;
+		size++;
+	}
+	size++;
+	if (i < 0)
+		size++;
+	div = i;
+	s = malloc(sizeof(*s) * (size + 1));
+	if (s != NULL)
+	{
+		for (j = 0; j <= size - 2; j++)
+		{
+			mod = div % 10;
+			div /= 10;
+			s[j] = mod + 48;
+		}
+		s[j] = div + 48;
+		if (i < 0)
+			s[j + 1] = '-';
+		s[size] = '\0';
+		j = 0;
+		p = s + size - 1;
+		while (j != size - 1)
+		{
+			write(1, p, 1);
+			p--;
+			j++;
+			new_nb++;
+		}
+		write(1, p, 1);
+	}
+	return (new_nb);
+}
+
 /**
  * _printf - prints all arguments
  * @format: pattern of arguments
@@ -95,6 +137,8 @@ int _printf(const char *format, ...)
 					nb = print_format_c(va_arg(ap, int), nb), i++;
 				if (format[i] == 's')
 					nb = print_format_s(va_arg(ap, char *), nb), i++;
+				if (format[i] == 'd')
+					nb = print_format_di(va_arg(ap, int), nb);
 			}
 		}
 	}
