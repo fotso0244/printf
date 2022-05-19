@@ -67,6 +67,12 @@ int _printf(const char *format, ...)
 			if (format[i] == '%')
 			{
 				i++;
+				if (format[i] == '%')
+				{
+					write(1, "%", 1);
+					nb++;
+					i++;
+				}
 				if (format[i] == 'c')
 				{
 					nb = print_format_c(va_arg(ap, int), nb);
