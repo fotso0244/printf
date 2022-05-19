@@ -107,6 +107,7 @@ int print_format_di(int i, int nb)
 			new_nb++;
 		}
 		write(1, p, 1);
+		new_nb++;
 	}
 	return (new_nb);
 }
