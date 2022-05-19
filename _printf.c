@@ -41,7 +41,25 @@ int print_format_s(char *str, int nb)
 	}
 	return (nb);
 }
+/**
+ * check - checks a character
+ * @c: a character
+ *
+ * Return: 1 if true, otherwise 0
+ */
+int check(char c)
+{
+	char *s = "%cdefgiosux";
 
+	while (*s != '\0')
+	{
+		if (*s != c)
+			s++;
+		else
+			return (1);
+	}
+	return (0);
+}
 /**
  * _printf - prints all arguments
  * @format: pattern of arguments
@@ -61,7 +79,7 @@ int _printf(const char *format, ...)
 			return (-1);
 		while (format[i] != '\0')
 		{
-			if (format[i] != '%')
+			if (format[i] != '%' || (format[i] == '%' && check(format[i + 1]) == 0))
 			{
 				write(1, format + i, 1);
 				i++;
