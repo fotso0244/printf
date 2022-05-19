@@ -66,6 +66,11 @@ int print_format_di(int i, int nb)
 	char *s, *p;
 	int mod = 0, new_nb = nb, j, div = i, size = -1;
 
+	if (i == 0)
+	{
+		write(1, "0", 1);
+		return (nb + 1);
+	}
 	while (div != 0)
 	{
 		div /= 10;
