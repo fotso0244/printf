@@ -50,7 +50,7 @@ int print_format_s(char *str, int nb)
  */
 int check(char c)
 {
-	char *s = "%cdefgiosux";
+	char *s = "%cdebfgiosux";
 
 	while (*s != '\0')
 	{
@@ -61,6 +61,64 @@ int check(char c)
 	}
 	return (0);
 }
+int print_format_b(int i, int nb)
+{
+	char *s, *p;
+	int size = -1, new_nb = nb, mod = 0, j;
+	long int div = (long int)i;
+
+	if (i == 0)
+	{
+		write(1, "0", 1);
+		return (nb + 1);
+	}
+	while (div != 0)
+	{
+		div /= 2;
+		size++;
+	}
+	size++;
+	if (i < 0)
+	{
+		div = (long int)i * (-1);
+		size++;
+	}
+	else
+		div = (long int)i;
+	s = malloc(sizeof(*s) * size);
+	if (s != NULL)
+	{
+		for (j = 0; j <= size - 2; j++)
+		{
+			mod = div % 2;
+			div /= 2;
+			s[j] = mod + 48;
+		}
+		s[j] = div + 48;
+		if (i < 0)
+			s[size - 1] = '-';
+		s[size] = '\0';
+		j = 0;
+		p = s + size - 1;
+		while (j != size - 1)
+		{
+			write(1, p, 1);
+			p--;
+			j++;
+			new_nb++;
+		}
+		write(1, p, 1);
+		new_nb++;
+	}
+	return (new_nb);
+}
+/**
+ * print_format_di - prints an integer
+ * @i: an integer to print
+ * @nb: a counter
+ *
+ * Return: a counter
+ */
 int print_format_di(int i, int nb)
 {
 	char *s, *p;
@@ -84,7 +142,7 @@ int print_format_di(int i, int nb)
 		size++;
 	}
 	else
-		div = i;
+		div = (long int)i;
 	s = malloc(sizeof(*s) * (size + 1));
 	if (s != NULL)
 	{
@@ -112,7 +170,6 @@ int print_format_di(int i, int nb)
 	}
 	return (new_nb);
 }
-
 /**
  * _printf - prints all arguments
  * @format: pattern of arguments
@@ -150,6 +207,8 @@ int _printf(const char *format, ...)
 					nb = print_format_s(va_arg(ap, char *), nb), i++;
 				if (format[i] == 'd' || format[i] == 'i')
 					nb = print_format_di(va_arg(ap, int), nb), i++;
+				if (format[i] == 'b')
+					nb = print_format_b(va_arg(ap, int), nb), i++;
 			}
 		}
 	}
