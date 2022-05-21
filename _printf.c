@@ -156,6 +156,8 @@ int print_format_diu(long int i, char f, int nb)
 
 	if (i < 0 && f == 'u')
 		div = UINT_MAX + 1 + i;
+	if (i > UINT_MAX && f == 'u')
+		div = i - UINT_MAX - 1;
 	
 	if (i < 0 && (f == 'd' || f == 'i'))
 	{
