@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <limits.h>
 #include <string.h>
 #include <stddef.h>
 #include <unistd.h>
@@ -61,11 +62,11 @@ int check(char c)
 	}
 	return (0);
 }
-int print_format_b(int i, int nb)
+int print_format_b(long int i, int nb)
 {
 	char *s, *p;
-	int size = -1, new_nb = nb, mod = 0, j;
-	long int div = (long int)i;
+	int size = -1, new_nb = nb, j;
+	long int mod = 0, div = i;
 
 	if (i == 0)
 	{
@@ -80,11 +81,11 @@ int print_format_b(int i, int nb)
 	size++;
 	if (i < 0)
 	{
-		div = (long int)i * (-1);
-		size++;
+		div = UINT_MAX + 1 + i;
+		/*size++;*/
 	}
 	else
-		div = (long int)i;
+		div = i;
 	s = malloc(sizeof(*s) * size);
 	if (s != NULL)
 	{
@@ -95,8 +96,8 @@ int print_format_b(int i, int nb)
 			s[j] = mod + 48;
 		}
 		s[j] = div + 48;
-		if (i < 0)
-			s[size - 1] = '-';
+		/*if (i < 0)
+			s[size - 1] = '-';*/
 		s[size] = '\0';
 		j = 0;
 		p = s + size - 1;
@@ -208,7 +209,7 @@ int _printf(const char *format, ...)
 				if (format[i] == 'd' || format[i] == 'i')
 					nb = print_format_di(va_arg(ap, int), nb), i++;
 				if (format[i] == 'b')
-					nb = print_format_b(va_arg(ap, int), nb), i++;
+					nb = print_format_b(va_arg(ap, long int), nb), i++;
 			}
 		}
 	}
