@@ -49,7 +49,8 @@ int print_format_sS(char *str, char f, int nb)
 				new_nb = print_format_box(*str, 'X', new_nb);
 				str++;
 			}
-			write(1, str, 1);
+			if (*str != '\0')
+				write(1, str, 1);
 			str++;
 			new_nb++;
 		}
@@ -238,10 +239,10 @@ int _printf(const char *format, ...)
 	va_list ap;
 
 	va_start(ap, format);
+	if (format == NULL || strcmp(format, "%") == 0)
+		return (-1);
 	if (format != NULL)
 	{
-		if (format == NULL || strcmp(format, "%") == 0)
-			return (-1);
 		while (format[i] != '\0')
 		{
 			if (format[i] != '%' || (format[i] == '%' && check(format[i + 1]) == 0))
