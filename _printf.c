@@ -77,9 +77,9 @@ int print_format_box(long int i, char f, int nb)
 	long int c, mod = 0, base, div = i;
 
 	if (i < 0)
-	{
 		div = UINT_MAX + 1 + i;
-	}
+	if (i > UINT_MAX)
+		div = i - UINT_MAX - 1;
 	else
 		div = i;
 	c = div;
