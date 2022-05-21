@@ -18,30 +18,48 @@ int print_format_c(char c, int nb)
 	nb++;
 	return (nb);
 }
+int print_format_box(long int i, char f, int nb);
 /**
- * print_format_s - prints a string
+ * print_format_sS - prints a string
  * @str: a string
+ * @f: a format identifier
  * @nb: counter
  *
  * Return: a counter nb
  */
-int print_format_s(char *str, int nb)
+int print_format_sS(char *str, char f, int nb)
 {
+	int new_nb = nb;
 	if (str != 0x0)
 	{
 		while (*str != '\0')
 		{
+			if (((*str > 0 && *str < 32) || (*str >= 127)) && (f == 'S'))
+			{
+				if (*str <= 15)
+				{
+					write(1, "\\x0",3);
+					new_nb += 3;
+				}
+				else
+				{
+					write(1, "\\x",2);
+					new_nb += 2;
+				}
+				new_nb = print_format_box(*str, 'X', new_nb);
+				str++;
+			}
 			write(1, str, 1);
 			str++;
-			nb++;
+			new_nb++;
 		}
 	}
 	else
 	{
 		write(1, "(null)", 6);
-		nb += 6;
+		new_nb += 6;
 	}
-	return (nb);
+	return (new_nb);
 }
 /**
  * check - checks a character
@@ -51,7 +69,7 @@ int print_format_s(char *str, int nb)
  */
 int check(char c)
 {
-	char *s = "%cdebXfgiosux";
+	char *s = "%cdebXfgiosuxS";
 
 	while (*s != '\0')
 	{
@@ -101,6 +119,7 @@ int print_format_box(long int i, char f, int nb)
 	}
 	size++;
 	div = c;
+	mod = div % base;
 	s = malloc(sizeof(*s) * size);
 	if (s != NULL)
 	{
@@ -240,8 +259,8 @@ int _printf(const char *format, ...)
 				}
 				if (format[i] == 'c')
 					nb = print_format_c(va_arg(ap, int), nb), i++;
-				if (format[i] == 's')
-					nb = print_format_s(va_arg(ap, char *), nb), i++;
+				if (format[i] == 's' || format[i] == 'S')
+					nb = print_format_sS(va_arg(ap, char *), format[i], nb), i++;
 				if (format[i] == 'd' || format[i] == 'i' || format[i] == 'u')
 					nb = print_format_diu(va_arg(ap, long int), format[i], nb), i++;
 				if (format[i] == 'b' || format[i] == 'X' || format[i] == 'o' || format[i] == 'x')
