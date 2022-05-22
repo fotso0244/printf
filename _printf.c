@@ -301,7 +301,7 @@ int _printf(const char *format, ...)
 						write(1, "+", 1);
 						nb += 2, i++;
 					}
-					if (format[i] == ' ' && l >= 0 && (format[i + 1] == 'd' || format[i + 1] == 'i'))
+					if (format[i] == ' ' && format[i - 1] != '+' && l >= 0 && (format[i + 1] == 'd' || format[i + 1] == 'i'))
 						write(1, " ", 1), nb++;
 					i++;
 					if (format[i] == '+' && l < 0)
