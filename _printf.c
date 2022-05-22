@@ -284,12 +284,12 @@ int _printf(const char *format, ...)
 						if (format[i + 1] == 'x' && l != 0)
 						{
 							write(1, "0x", 2);
-							nb += 2, i++;
+							nb += 2;
 						}
 						if (format[i + 1] == 'X' && l != 0)
 						{
 							write(1, "0X", 2);
-							nb += 2, i++;
+							nb += 2;
 						}
 					}
 					if (format[i] == '%')
