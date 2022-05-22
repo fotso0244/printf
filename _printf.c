@@ -247,7 +247,7 @@ int print_format_diu(int i, char f, int nb)
 int _printf(const char *format, ...)
 {
 	int i = 0, nb = 0;
-	char *s2 = "pcsS", *s1 = "% +cdpebXfgiosuxS#";
+	char *s2 = "oxXpcsS", *s1 = "% +cdpebXfgiosuxS#";
 	long int l;
 	va_list ap;
 
@@ -274,18 +274,19 @@ int _printf(const char *format, ...)
 				}
 				if (format[i] == '+' || format[i] == ' ' || format[i] == '%' || format[i] == '#')
 				{
-					if (format[i] != '%' && check(format[i + 1], s2) == 0)
+					if (format[i] == 'd' || format[i] == 'i' || format[i] == 'u' || check(format[i + 1], s2) == 0)
 						l = va_arg(ap, int);
 					if (format[i] == '#')
 					{
-						if (format[i + 1] == 'o')
+						l = va_arg(ap, long int);
+						if (format[i + 1] == 'o' && l != 0)
 							write(1, "0", 1), nb++;
-						if (format[i + 1] == 'x')
+						if (format[i + 1] == 'x' && l != 0)
 						{
 							write(1, "0x", 2);
 							nb += 2, i++;
 						}
-						if (format[i + 1] == 'X')
+						if (format[i + 1] == 'X' && l != 0)
 						{
 							write(1, "0X", 2);
 							nb += 2, i++;
@@ -293,17 +294,19 @@ int _printf(const char *format, ...)
 					}
 					if (format[i] == '%')
 						write(1, "%", 1), nb++;
-					if (format[i] == '+' && l >= 0 && format[i + 1] != ' ')
+					if (format[i] == '+' && l >= 0 && (format[i + 1] == 'd' || format[i + 1] == 'i'))
 						write(1, "+", 1), nb++;
-					if (format[i] == '+' && l >= 0 && format[i + 1] == ' ')
+					if (format[i] == '+' && l >= 0 && (format[i + 1] == 'd' || format[i + 1] == 'i'))
 					{
 						write(1, " ", 1);
 						write(1, "+", 1);
 						nb += 2, i++;
 					}
-					if (format[i] == ' ' && l >= 0)
+					if (format[i] == ' ' && l >= 0 && (format[i + 1] == 'd' || format[i + 1] == 'i'))
 						write(1, " ", 1), nb++;
 					i++;
+					if (format[i] == '+' && l < 0)
+						i++;
 				}
 				if (format[i] == 'c')
 					nb = print_format_c(va_arg(ap, int), nb), i++;
