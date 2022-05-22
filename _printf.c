@@ -68,9 +68,9 @@ int print_format_sS(char *str, char f, int nb)
  *
  * Return: 1 if true, otherwise 0
  */
-int check(char c)
+int check(char c, char *s)
 {
-	char *s = "%cdpebXfgiosuxS";
+	/*char *s = "% +cdpebXfgiosuxS#";*/
 
 	while (*s != '\0')
 	{
@@ -247,6 +247,8 @@ int print_format_diu(long int i, char f, int nb)
 int _printf(const char *format, ...)
 {
 	int i = 0, nb = 0;
+	char *s2 = "pcsS", *s1 = "% +cdpebXfgiosuxS#";
+	long int l;
 	va_list ap;
 
 	va_start(ap, format);
@@ -256,7 +258,7 @@ int _printf(const char *format, ...)
 	{
 		while (format[i] != '\0')
 		{
-			if (format[i] != '%' || (format[i] == '%' && check(format[i + 1]) == 0))
+			if (format[i] != '%' || (format[i] == '%' && check(format[i + 1], s1) == 0))
 			{
 				write(1, format + i, 1);
 				i++, nb++;
@@ -264,9 +266,43 @@ int _printf(const char *format, ...)
 			if (format[i] == '%')
 			{
 				i++;
-				if (format[i] == '%')
+				if (format[i] == ' ' && (format[i + 1] == '%' || format[i + 1] == '\0'))
 				{
-					write(1, "%", 1);
+					write(1, "% ", 2);
+					nb++;
+					i++;
+				}
+				if (format[i] == '+' || format[i] == ' ' || format[i] == '%' || format[i] == '#')
+				{
+					if (format[i] != '%' && check(format[i + 1], s2) == 0)
+						l = va_arg(ap, long int);
+					if (format[i] == '#')
+					{
+						if (format[i + 1] == 'o')
+							write(1, "0", 1);
+						if (format[i + 1] == 'x')
+						{
+							write(1, "0x", 2);
+							nb++, i++;
+						}
+						if (format[i + 1] == 'X')
+						{
+							write(1, "0X", 2);
+							nb++, i++;
+						}
+					}
+					if (format[i] == '%')
+						write(1, "%", 1);
+					if (format[i] == '+' && l >= 0 && format[i + 1] != ' ')
+						write(1, "+", 1);
+					if (format[i] == '+' && l >= 0 && format[i + 1] == ' ')
+					{
+						write(1, " ", 1);
+						write(1, "+", 1);
+						nb++, i++;
+					}
+					if (format[i] == ' ' && l >= 0)
+						write(1, " ", 1);
 					nb++, i++;
 				}
 				if (format[i] == 'c')
@@ -274,11 +310,11 @@ int _printf(const char *format, ...)
 				if (format[i] == 's' || format[i] == 'S')
 					nb = print_format_sS(va_arg(ap, char *), format[i], nb), i++;
 				if (format[i] == 'd' || format[i] == 'i' || format[i] == 'u')
-					nb = print_format_diu(va_arg(ap, long int), format[i], nb), i++;
+					nb = print_format_diu(l, format[i], nb), i++;
 				if (format[i] == 'p')
 					nb = print_format_boxp((long int)va_arg(ap, void *), format[i], nb), i++;
 				if (format[i] == 'b' || format[i] == 'X' || format[i] == 'o' || format[i] == 'x')
-					nb = print_format_boxp(va_arg(ap, long int), format[i], nb), i++;
+					nb = print_format_boxp(l, format[i], nb), i++;
 			}
 		}
 	}
