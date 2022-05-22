@@ -269,8 +269,7 @@ int _printf(const char *format, ...)
 				if (format[i] == ' ' && (format[i + 1] == '%' || format[i + 1] == '\0'))
 				{
 					write(1, "% ", 2);
-					nb++;
-					i++;
+					nb += 2;
 				}
 				if (format[i] == '+' || format[i] == ' ' || format[i] == '%' || format[i] == '#')
 				{
