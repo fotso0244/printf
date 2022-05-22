@@ -152,7 +152,7 @@ int print_format_boxp(long int i, char f, int nb)
 			else
 				if (f == 'X')
 					s[j] = mod + 55;
-		if (div < 10 && f == 'p')
+		if (div < 10 && i < 0 && f == 'p')
 			s[j] = 'f';
 		s[size] = '\0';
 		j = 0;
