@@ -178,25 +178,25 @@ int print_format_boxp(long int i, char f, int nb)
  *
  * Return: a counter
  */
-int print_format_diu(long int i, char f, int nb)
+int print_format_diu(int i, char f, int nb)
 {
 	char *s, *p;
 	int new_nb = nb, j, size = -1;
-	long int mod = 0, c, div = i;
+	long int mod = 0, c, div = (long int)i;
 
 	if (i < 0 && f == 'u')
 		div = UINT_MAX + 1 + i;
-	if (i > UINT_MAX && f == 'u')
+	if ((unsigned int)i > UINT_MAX && f == 'u')
 		div = i - UINT_MAX - 1;
 	
 	if (i < 0 && (f == 'd' || f == 'i'))
 	{
-		div = i * (-1);
+		div = (long int)i * (-1);
 		size++;
 	}
 	else
 		if (f == 'd' || f == 'i')
-			div = i;
+			div = (long int)i;
 	c = div;
 	if (i == 0)
 	{
@@ -275,7 +275,7 @@ int _printf(const char *format, ...)
 				if (format[i] == '+' || format[i] == ' ' || format[i] == '%' || format[i] == '#')
 				{
 					if (format[i] != '%' && check(format[i + 1], s2) == 0)
-						l = va_arg(ap, long int);
+						l = va_arg(ap, int);
 					if (format[i] == '#')
 					{
 						if (format[i + 1] == 'o')
