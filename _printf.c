@@ -279,31 +279,31 @@ int _printf(const char *format, ...)
 					if (format[i] == '#')
 					{
 						if (format[i + 1] == 'o')
-							write(1, "0", 1);
+							write(1, "0", 1), nb++;
 						if (format[i + 1] == 'x')
 						{
 							write(1, "0x", 2);
-							nb++, i++;
+							nb += 2, i++;
 						}
 						if (format[i + 1] == 'X')
 						{
 							write(1, "0X", 2);
-							nb++, i++;
+							nb += 2, i++;
 						}
 					}
 					if (format[i] == '%')
-						write(1, "%", 1);
+						write(1, "%", 1), nb++;
 					if (format[i] == '+' && l >= 0 && format[i + 1] != ' ')
-						write(1, "+", 1);
+						write(1, "+", 1), nb++;
 					if (format[i] == '+' && l >= 0 && format[i + 1] == ' ')
 					{
 						write(1, " ", 1);
 						write(1, "+", 1);
-						nb++, i++;
+						nb += 2, i++;
 					}
 					if (format[i] == ' ' && l >= 0)
-						write(1, " ", 1);
-					nb++, i++;
+						write(1, " ", 1), nb++;
+					i++;
 				}
 				if (format[i] == 'c')
 					nb = print_format_c(va_arg(ap, int), nb), i++;
