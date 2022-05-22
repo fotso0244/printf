@@ -18,7 +18,7 @@ int print_format_c(char c, int nb)
 	nb++;
 	return (nb);
 }
-int print_format_box(long int i, char f, int nb);
+int print_format_boxp(long int i, char f, int nb);
 /**
  * print_format_sS - prints a string
  * @str: a string
@@ -46,7 +46,7 @@ int print_format_sS(char *str, char f, int nb)
 					write(1, "\\x",2);
 					new_nb += 2;
 				}
-				new_nb = print_format_box(*str, 'X', new_nb);
+				new_nb = print_format_boxp(*str, 'X', new_nb);
 				str++;
 			}
 			if (*str != '\0')
@@ -70,7 +70,7 @@ int print_format_sS(char *str, char f, int nb)
  */
 int check(char c)
 {
-	char *s = "%cdebXfgiosuxS";
+	char *s = "%cdpebXfgiosuxS";
 
 	while (*s != '\0')
 	{
@@ -82,36 +82,41 @@ int check(char c)
 	return (0);
 }
 /**
- * print_format_box - prints in format b, o, x and X
+ * print_format_boxp - prints in format b, o, x and X
  * @i: an integer
  * @f: a format identifier
  * @nb: a counter
  *
  * Return: a counter
  */
-int print_format_box(long int i, char f, int nb)
+int print_format_boxp(long int i, char f, int nb)
 {
 	char *s, *p;
 	int size = -1, new_nb = nb, j;
 	long int c, mod = 0, base, div = i;
 
-	if (i < 0)
+	if (i < 0 && (f == 'b' || f == 'o' || f == 'x' || f == 'X'))
 		div = UINT_MAX + 1 + i;
-	if (i > UINT_MAX)
+	if (i < 0 && f == 'p')
+		div = LONG_MAX + i + 1;
+	if (i > UINT_MAX && (f == 'b' || f == 'X' || f == 'o' || f == 'x'))
 		div = i - UINT_MAX - 1;
-	else
-		div = i;
 	c = div;
 	if (f == 'b')
 		base = 2;
 	if (f == 'o')
 		base = 8;
-	if (f == 'x' || f == 'X')
+	if (f == 'x' || f == 'p' || f == 'X')
 		base = 16;
-	if (i == 0)
+	if (i == 0 && (f == 'o' || f == 'b' || f == 'x' || f == 'X'))
 	{
 		write(1, "0", 1);
 		return (nb + 1);
+	}
+	if (i == 0 && f == 'p')
+	{
+		write(1, "(nil)", 5);
+		return (nb + 5);
 	}
 	while (div != 0)
 	{
@@ -121,6 +126,8 @@ int print_format_box(long int i, char f, int nb)
 	size++;
 	div = c;
 	mod = div % base;
+	if (f == 'p')
+		write(1, "0x", 2), new_nb += 2;
 	s = malloc(sizeof(*s) * size);
 	if (s != NULL)
 	{
@@ -131,7 +138,7 @@ int print_format_box(long int i, char f, int nb)
 			if (mod < 10)
 				s[j] = mod + 48;
 			else
-				if (f == 'x')
+				if (f == 'x' || f == 'p')
 					s[j] = mod + 87;
 				else
 					if (f == 'X')
@@ -145,6 +152,8 @@ int print_format_box(long int i, char f, int nb)
 			else
 				if (f == 'X')
 					s[j] = mod + 55;
+		if (div < 10 && f == 'p')
+			s[j] = 'f';
 		s[size] = '\0';
 		j = 0;
 		p = s + size - 1;
@@ -158,6 +167,7 @@ int print_format_box(long int i, char f, int nb)
 		write(1, p, 1);
 		new_nb++;
 	}
+	free(s);
 	return (new_nb);
 }
 /**
@@ -225,6 +235,7 @@ int print_format_diu(long int i, char f, int nb)
 		write(1, p, 1);
 		new_nb++;
 	}
+	free(s);
 	return (new_nb);
 }
 /**
@@ -264,8 +275,10 @@ int _printf(const char *format, ...)
 					nb = print_format_sS(va_arg(ap, char *), format[i], nb), i++;
 				if (format[i] == 'd' || format[i] == 'i' || format[i] == 'u')
 					nb = print_format_diu(va_arg(ap, long int), format[i], nb), i++;
+				if (format[i] == 'p')
+					nb = print_format_boxp((long int)va_arg(ap, void *), format[i], nb), i++;
 				if (format[i] == 'b' || format[i] == 'X' || format[i] == 'o' || format[i] == 'x')
-					nb = print_format_box(va_arg(ap, long int), format[i], nb), i++;
+					nb = print_format_boxp(va_arg(ap, long int), format[i], nb), i++;
 			}
 		}
 	}
