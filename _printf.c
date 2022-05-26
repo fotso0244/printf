@@ -49,7 +49,7 @@ int print_format_sS(char *str, char f, int nb)
 				new_nb = print_format_boxp(*str, 'X', new_nb);
 				str++;
 			}
-			if (*str != '\0')
+			if (*str != '\0' && *str >= 32 && *str < 127)
 			{
 				write(1, str, 1);
 				str++;
