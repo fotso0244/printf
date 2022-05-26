@@ -252,25 +252,23 @@ int _printf(const char *format, ...)
 	va_list ap;
 
 	va_start(ap, format);
-	if (format == NULL || strcmp(format, "%") == 0)
+	if (format == NULL || strcmp(format, "%") == 0 || strcmp(format, "% ") == 0)
 		return (-1);
 	if (format != NULL)
-	{
+	{i = 0;
 		while (format[i] != '\0')
 		{
 			if (format[i] != '%' || (format[i] == '%' && check(format[i + 1], s1) == 0))
 			{
 				write(1, format + i, 1);
-				i++, nb++;
+				i++;
+				nb++;
 			}
 			if (format[i] == '%')
 			{
 				i++;
-				if (format[i] == ' ' && (format[i + 1] == '%' || format[i + 1] == '\0'))
-				{
-					write(1, "% ", 2);
-					nb += 2;
-				}
+				if (format[i] == ' ' && format[i + 1] == '%')
+					i++;
 				if (format[i] == '+' || format[i] == ' ' || format[i] == '%' || format[i] == '#')
 				{
 					if (format[i] == 'd' || format[i] == 'i' || format[i] == 'u' || check(format[i + 1], s2) == 0)
@@ -292,7 +290,10 @@ int _printf(const char *format, ...)
 						}
 					}
 					if (format[i] == '%')
-						write(1, "%", 1), nb++;
+					{
+						write(1, "%", 1);
+						nb++;
+					}
 					if (format[i] == '+' && l >= 0 && (format[i + 1] == 'd' || format[i + 1] == 'i'))
 						write(1, "+", 1), nb++;
 					if (format[i] == '+' && l >= 0 && format[i + 1] == ' ')
