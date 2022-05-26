@@ -50,9 +50,11 @@ int print_format_sS(char *str, char f, int nb)
 				str++;
 			}
 			if (*str != '\0')
+			{
 				write(1, str, 1);
-			str++;
-			new_nb++;
+				str++;
+				new_nb++;
+			}
 		}
 	}
 	else
@@ -310,7 +312,10 @@ int _printf(const char *format, ...)
 				if (format[i] == 'c')
 					nb = print_format_c(va_arg(ap, int), nb), i++;
 				if (format[i] == 's' || format[i] == 'S')
-					nb = print_format_sS(va_arg(ap, char *), format[i], nb), i++;
+				{
+					nb = print_format_sS(va_arg(ap, char *), format[i], nb);
+					i++;
+				}
 				if (format[i] == 'd' || format[i] == 'i' || format[i] == 'u')
 					nb = print_format_diu(l, format[i], nb), i++;
 				if (format[i] == 'p')
