@@ -130,7 +130,7 @@ int print_format_lbox(unsigned long int i, char f, int nb)
 			if (mod < 10)
 				s[j] = mod + 48;
 			else
-				if (f == 'x' || f == 'p')
+				if (f == 'x')
 					s[j] = mod + 87;
 				else
 					if (f == 'X')
@@ -140,10 +140,10 @@ int print_format_lbox(unsigned long int i, char f, int nb)
 			s[j] = div + 48;
 		else
 			if (f == 'x')
-				s[j] = mod + 87;
+				s[j] = div + 87;
 			else
 				if (f == 'X')
-					s[j] = mod + 55;
+					s[j] = div + 55;
 		s[size] = '\0';
 		j = 0;
 		p = s + size - 1;
@@ -204,7 +204,6 @@ int print_format_boxp(long int i, char f, int nb)
 	}
 	size++;
 	div = c;
-	mod = div % base;
 	if (f == 'p')
 		write(1, "0x", 2), new_nb += 2;
 	s = malloc(sizeof(*s) * size);
@@ -227,10 +226,10 @@ int print_format_boxp(long int i, char f, int nb)
 			s[j] = div + 48;
 		else
 			if (f == 'x')
-				s[j] = mod + 87;
+				s[j] = div + 87;
 			else
 				if (f == 'X')
-					s[j] = mod + 55;
+					s[j] = div + 55;
 		if (div < 10 && i < 0 && f == 'p')
 			s[j] = 'f';
 		s[size] = '\0';
